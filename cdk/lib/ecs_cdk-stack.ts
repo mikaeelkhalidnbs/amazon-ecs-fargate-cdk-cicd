@@ -19,9 +19,9 @@ export class EcsCdkStack extends cdk.Stack {
      * Create a new VPC with single NAT Gateway
      */
     const vpc = new ec2.Vpc(this, 'ecs-cdk-vpc', {
-      cidr: '10.0.0.0/16',
+      cidr: '192.168.0.0/20',
       natGateways: 1,
-      maxAzs: 3,
+      maxAzs: 2,
     });
 
     const clusterAdmin = new iam.Role(this, 'AdminRole', {
@@ -63,7 +63,7 @@ export class EcsCdkStack extends cdk.Stack {
     taskDef.addToExecutionRolePolicy(executionRolePolicy);
 
     const container = taskDef.addContainer('django-rest-api', {
-      image: ecs.ContainerImage.fromRegistry('nikunjv/flask-image:blue'),
+      image: ecs.ContainerImage.fromRegistry('mikaeelkhalid/mik-express-app'),
       memoryLimitMiB: 256,
       cpu: 256,
       logging,
@@ -139,7 +139,7 @@ export class EcsCdkStack extends cdk.Stack {
           },
           build: {
             commands: [
-              'cd flask-docker-app',
+              'cd django-app',
               `docker build -t $ECR_REPO_URI:$TAG .`,
               '$(aws ecr get-login --no-include-email)',
               'docker push $ECR_REPO_URI:$TAG',
@@ -149,7 +149,7 @@ export class EcsCdkStack extends cdk.Stack {
             commands: [
               'echo "In Post-Build Stage"',
               'cd ..',
-              'printf \'[{"name":"flask-app","imageUri":"%s"}]\' $ECR_REPO_URI:$TAG > imagedefinitions.json',
+              'printf \'[{"name":"django-app","imageUri":"%s"}]\' $ECR_REPO_URI:$TAG > imagedefinitions.json',
               'pwd; ls -al; cat imagedefinitions.json',
             ],
           },
@@ -167,11 +167,13 @@ export class EcsCdkStack extends cdk.Stack {
 
     const sourceAction = new codepipeline_actions.GitHubSourceAction({
       actionName: 'GitHub_Source',
-      owner: 'user-name',
+      owner: 'mikaeelkhalidnbs',
       repo: 'amazon-ecs-fargate-cdk-cicd',
-      branch: 'main',
-      oauthToken: cdk.SecretValue.secretsManager('/my/github/token'),
-      //oauthToken: cdk.SecretValue.plainText('<plain-text>'),
+      branch: 'master',
+      // oauthToken: cdk.SecretValue.secretsManager('backend-github'),
+      oauthToken: cdk.SecretValue.plainText(
+        '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'
+      ),
       output: sourceOutput,
     });
 
