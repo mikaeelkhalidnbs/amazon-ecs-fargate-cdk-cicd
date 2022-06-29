@@ -102,12 +102,12 @@ export class EcsCdkStack extends cdk.Stack {
     const ecrRepo = new ecr.Repository(this, 'EcrRepo');
 
     const gitHubSource = codebuild.Source.gitHub({
-      owner: 'user-name',
+      owner: 'mikaeelkhalidnbs',
       repo: 'amazon-ecs-fargate-cdk-cicd',
       webhook: true, // optional, default: true if `webhookFilteres` were provided, false otherwise
       webhookFilters: [
         codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(
-          'main'
+          'master'
         ),
       ], // optional, by default all pushes and Pull Requests will trigger a build
     });
