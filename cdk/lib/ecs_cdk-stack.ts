@@ -170,10 +170,10 @@ export class EcsCdkStack extends cdk.Stack {
       owner: 'mikaeelkhalidnbs',
       repo: 'amazon-ecs-fargate-cdk-cicd',
       branch: 'master',
-      // oauthToken: cdk.SecretValue.secretsManager('backend-github'),
-      oauthToken: cdk.SecretValue.plainText(
-        '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'
-      ),
+      oauthToken: cdk.SecretValue.secretsManager('backend-github'),
+      // oauthToken: cdk.SecretValue.plainText(
+      //   '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'
+      // ),
       output: sourceOutput,
     });
 
