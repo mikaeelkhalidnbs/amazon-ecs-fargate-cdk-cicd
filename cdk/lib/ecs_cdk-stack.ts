@@ -149,7 +149,7 @@ export class EcsCdkStack extends cdk.Stack {
             commands: [
               'echo "In Post-Build Stage"',
               'cd ..',
-              'printf \'[{"name":"django-app","imageUri":"%s"}]\' $ECR_REPO_URI:$TAG > imagedefinitions.json',
+              'printf \'[{"name":"django-rest-api","imageUri":"%s"}]\' $ECR_REPO_URI:$TAG > imagedefinitions.json',
               'pwd; ls -al; cat imagedefinitions.json',
             ],
           },
