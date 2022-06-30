@@ -83,17 +83,12 @@ export class EcsCdkStack extends cdk.Stack {
           taskDefinition: taskDef,
           publicLoadBalancer: true,
           desiredCount: 2,
-          listenerPort: 80,
         }
       );
 
-    const scaling = fargateService.service.autoScaleTaskCount({
-      maxCapacity: 2,
-    });
-    scaling.scaleOnCpuUtilization('CpuScaling', {
-      targetUtilizationPercent: 10,
-      scaleInCooldown: cdk.Duration.seconds(60),
-      scaleOutCooldown: cdk.Duration.seconds(60),
+    fargateService.targetGroup.configureHealthCheck({
+      port: '8000',
+      path: '/api',
     });
 
     // ***PIPELINE CONSTRUCTS***
@@ -121,9 +116,6 @@ export class EcsCdkStack extends cdk.Stack {
         privileged: true,
       },
       environmentVariables: {
-        CLUSTER_NAME: {
-          value: `${cluster.clusterName}`,
-        },
         ECR_REPO_URI: {
           value: `${ecrRepo.repositoryUri}`,
         },
