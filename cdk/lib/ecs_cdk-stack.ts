@@ -70,7 +70,7 @@ export class EcsCdkStack extends cdk.Stack {
     });
 
     container.addPortMappings({
-      containerPort: 5000,
+      containerPort: 8000,
       protocol: ecs.Protocol.TCP,
     });
 
@@ -82,13 +82,13 @@ export class EcsCdkStack extends cdk.Stack {
           cluster: cluster,
           taskDefinition: taskDef,
           publicLoadBalancer: true,
-          desiredCount: 3,
+          desiredCount: 2,
           listenerPort: 80,
         }
       );
 
     const scaling = fargateService.service.autoScaleTaskCount({
-      maxCapacity: 6,
+      maxCapacity: 2,
     });
     scaling.scaleOnCpuUtilization('CpuScaling', {
       targetUtilizationPercent: 10,
