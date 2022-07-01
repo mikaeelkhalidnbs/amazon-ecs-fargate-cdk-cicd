@@ -6,4 +6,4 @@ from rest_framework.response import Response
 
 @api_view(['GET'])
 def getHello(request):
-    return Response("Hello World")
+    return Response("Hello Bakri")
